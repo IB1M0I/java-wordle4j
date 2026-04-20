@@ -59,7 +59,7 @@ public class Wordle {
 
 
                         System.out.println("Введите слово: ");
-                        userAnswer = scanner.nextLine().toLowerCase().replace("ё","е").trim();
+                        userAnswer = scanner.nextLine().toLowerCase().replace("ё", "е").trim();
 
                         if (userAnswer.isBlank()) {
                             System.out.println(game.getHints());
@@ -92,7 +92,7 @@ public class Wordle {
                     } catch (NonRussianWordException e) {
                         //Вывод сообщения не на русском языке
                         System.out.println(e.getMessage());
-                    }catch (WordNotFoundInDictionary e){
+                    } catch (WordNotFoundInDictionary e) {
                         System.out.println(e.getMessage());
                     }
                 }

@@ -1,6 +1,8 @@
 package ru.yandex.practicum;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /*
 этот класс содержит в себе список слов List<String>

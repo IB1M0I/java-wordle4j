@@ -3,7 +3,10 @@ package ru.yandex.practicum;
 import ru.yandex.practicum.gameException.DictionaryLoadException;
 import ru.yandex.practicum.gameException.LogWriteException;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 

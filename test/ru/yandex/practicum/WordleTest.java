@@ -142,7 +142,7 @@ class WordleTest {
             } catch (DictionaryLoadException e) {
                 assertEquals("Список не загружен", e.getMessage());
             }
-        } finally{
+        } finally {
             Files.deleteIfExists(dict);
             Files.move(backup, dict, StandardCopyOption.REPLACE_EXISTING);
 
