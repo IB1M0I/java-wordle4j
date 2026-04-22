@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class WordleDictionaryLoader {
     public WordleDictionary getList() throws DictionaryLoadException, LogWriteException {
         List<String> words = new ArrayList<>(); //Список подходящих слов
         String line; //Прочитанное слово
-        try (FileReader fileReader = new FileReader("words_ru.txt"); BufferedReader bufferedReader = new BufferedReader(fileReader)) {
+        try (FileReader fileReader = new FileReader("words_ru.txt", StandardCharsets.UTF_8); BufferedReader bufferedReader = new BufferedReader(fileReader)) {
 
 
             while (bufferedReader.ready()) {

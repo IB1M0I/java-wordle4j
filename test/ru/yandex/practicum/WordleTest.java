@@ -17,6 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -24,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 class WordleTest {
     static PrintWriter printWriter;
     static WordleGame game;
+    static Random random = new Random();
 
     @BeforeAll
     static void initAll() {
@@ -32,7 +34,7 @@ class WordleTest {
 
     @BeforeEach
     void initEach() {
-        game = new WordleGame(new WordleDictionary(List.of("маска")), printWriter);
+        game = new WordleGame(new WordleDictionary(List.of("маска")), printWriter, random);
     }
 
 
@@ -43,7 +45,7 @@ class WordleTest {
             Wordle.checkUserAnswer("круг", printWriter);
             fail("Ожидался InvalidWordLengthException");
         } catch (InvalidWordLengthException e) {
-            Assertions.assertEquals("ОШИБКА: ответ длинее/меньшн 5 символов", e.getMessage());
+            Assertions.assertEquals("ОШИБКА: ответ длинее/меньше 5 символов", e.getMessage());
         }
     }
 
@@ -54,7 +56,7 @@ class WordleTest {
             Wordle.checkUserAnswer("каргуш", printWriter);
             fail("Ожидался InvalidWordLengthException");
         } catch (InvalidWordLengthException e) {
-            Assertions.assertEquals("ОШИБКА: ответ длинее/меньшн 5 символов", e.getMessage());
+            Assertions.assertEquals("ОШИБКА: ответ длинее/меньше 5 символов", e.getMessage());
         }
     }
 
@@ -94,7 +96,7 @@ class WordleTest {
     //Проверка на правильное совпадение
     @Test
     void checkStartAnswerShouldSetWinWhenAnswerMatches() {
-        game = new WordleGame(new WordleDictionary(List.of("маска")), printWriter);
+        game = new WordleGame(new WordleDictionary(List.of("маска")), printWriter, random);
         Assertions.assertTrue(game.checkStartAnswer("маска"));
         Assertions.assertTrue(game.getIsWin());
     }
@@ -116,10 +118,10 @@ class WordleTest {
     @Test
     void getHintsShouldNotRepeatIssuedHint() {
         WordleDictionary dictionary = new WordleDictionary(List.of("абзац", "аванс"));
-        game = new WordleGame(dictionary, printWriter);
-        String hint1 = game.getHints();
-        String hint2 = game.getHints();
-        String hint3 = game.getHints();
+        game = new WordleGame(dictionary, printWriter, random);
+        String hint1 = game.getHints(random);
+        String hint2 = game.getHints(random);
+        String hint3 = game.getHints(random);
 
         Assertions.assertNotEquals(hint1, hint2);
         Assertions.assertEquals("Подсказок нет", hint3);

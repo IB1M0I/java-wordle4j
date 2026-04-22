@@ -20,13 +20,16 @@ import java.util.*;
 не забудьте про специальные типы исключений для игровых и неигровых ошибок
  */
 public class WordleGame {
-    public WordleGame(WordleDictionary dictionary, PrintWriter logWrite) {
+    public WordleGame(WordleDictionary dictionary, PrintWriter logWrite, Random random) {
         this.dictionary = dictionary;
-        this.answer = randomAnswer();
+        this.answer = randomAnswer(random);
         this.logWrite = logWrite;
     }
 
-    private final String answer; //Правильный ответ
+    public static final int WORD_LENGTH = 5; //Допустимая длина слова
+    public static final int MAX_ATTEMPTS = 6; //Количество попыток
+
+    private String answer; //Правильный ответ
 
     private int steps; //Количество попыток
 
@@ -46,7 +49,7 @@ public class WordleGame {
         if (!dictionary.contains(userAnswer)) {
             throw new WordNotFoundInDictionary();
         }
-        if (steps < 0 || steps > 6) {
+        if (steps < 0 || steps > MAX_ATTEMPTS) {
             throw new RuntimeException("Некорректное значение steps: " + steps);
         }
         if (rightPos == null || rightPos.length != answer.length()) {
@@ -75,14 +78,14 @@ public class WordleGame {
             if (userC[i] == answerC[i]) {
                 required.add(userC[i]);
                 rightPos[i] = answerC[i];
-                resultBuilder.append("^");
+                resultBuilder.append("+");
                 continue;
             }
             boolean found = false;
             for (int j = 0; j < answer.length(); j++) {
                 if (userC[i] == answerC[j]) {
                     required.add(userC[i]);
-                    resultBuilder.append("+");
+                    resultBuilder.append("^");
                     found = true;
                     break;
                 }
@@ -110,13 +113,12 @@ public class WordleGame {
         }
     }
 
-    public String getHints() throws LogWriteException {
+    public String getHints(Random random) throws LogWriteException {
         if (rightPos == null) {
             throw new RuntimeException("rightPos не инициализирован");
         }
 
         List<String> hints = new ArrayList<>(dictionary.getAll());
-        Random random = new Random();
 
         logWrite.println("Запрошена подсказка\n");
         if (logWrite.checkError()) {
@@ -187,12 +189,21 @@ public class WordleGame {
     }
 
     //Генерация правильного ответа
-    public String randomAnswer() {
-        Random random = new Random();
+    public String randomAnswer(Random random) {
         int index = random.nextInt(dictionary.size());
         rightPos = new char[dictionary.get(index).length()];
         Arrays.fill(rightPos, '*'); //Заполнение массива *
         return dictionary.get(index);
+    }
+
+    public void newAnswer(Random random) {
+        answer = dictionary.get(random.nextInt(dictionary.size()));
+        steps = 0;
+        banned.clear();
+        required.clear();
+        Arrays.fill(rightPos, '*');
+        issuedHints.clear();
+        isWin = false;
     }
 
     //Геттер победы

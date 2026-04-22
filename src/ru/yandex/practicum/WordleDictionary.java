@@ -29,7 +29,8 @@ public class WordleDictionary {
     }
 
     public boolean contains(String word) {
-        return wordSet.contains(word); // O(1) проверка вместо O(n)
+        //А зачем если в Wordle:64 есть нормализвация?
+        return wordSet.contains(word.toLowerCase().replace("ё", "е").trim());
     }
 
     public List<String> getAll() {
