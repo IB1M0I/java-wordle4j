@@ -45,7 +45,7 @@ class WordleTest {
             Wordle.checkUserAnswer("круг", printWriter);
             fail("Ожидался InvalidWordLengthException");
         } catch (InvalidWordLengthException e) {
-            Assertions.assertEquals("ОШИБКА: ответ длинее/меньше 5 символов", e.getMessage());
+            Assertions.assertEquals(String.format("ОШИБКА: ответ длинее/меньше %d символов", WordleGame.WORD_LENGTH), e.getMessage());
         }
     }
 
@@ -56,7 +56,7 @@ class WordleTest {
             Wordle.checkUserAnswer("каргуш", printWriter);
             fail("Ожидался InvalidWordLengthException");
         } catch (InvalidWordLengthException e) {
-            Assertions.assertEquals("ОШИБКА: ответ длинее/меньше 5 символов", e.getMessage());
+            Assertions.assertEquals(String.format("ОШИБКА: ответ длинее/меньше %d символов", WordleGame.WORD_LENGTH), e.getMessage());
         }
     }
 
@@ -105,7 +105,7 @@ class WordleTest {
     @Test
     void checkingWordShouldReturnFiveCaretsAndIncreaseStepForCorrectWord() {
 
-        String expected = "^^^^^"; //аванс
+        String expected = "+++++"; //аванс
 
         Assertions.assertEquals(expected, game.checkingWord("маска"));
         Assertions.assertEquals(1, game.getSteps());

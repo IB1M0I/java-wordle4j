@@ -38,7 +38,7 @@ public class Wordle {
                         fw.write("Файл log.txt создан");
                         fw.flush();
                     } catch (IOException e) {
-                        System.out.printf("Ошибка создания log.txt: %n\n", e.getMessage());
+                        System.out.printf("Ошибка создания log.txt: %s\n", e.getMessage());
                     }
                 } catch (IOException e) {
                     System.out.printf("Ошибка поиска файла: %s\n", e.getMessage());
@@ -146,8 +146,9 @@ public class Wordle {
     }
 
     public static void checkUserAnswer(String userAnswer, PrintWriter logWrite) throws InvalidWordLengthException, NonRussianWordException, LogWriteException {
-        if (userAnswer.length() != WordleGame.WORD_LENGTH) {
-            if (userAnswer.length() > WordleGame.WORD_LENGTH) {
+        String answer = userAnswer.toLowerCase().replace("ё", "е").trim();
+        if (answer.length() != WordleGame.WORD_LENGTH) {
+            if (answer.length() > WordleGame.WORD_LENGTH) {
                 logWrite.printf("ОШИБКА: ответ длинее %d символов\n", WordleGame.WORD_LENGTH);
             } else {
                 logWrite.printf("ОШИБКА: ответ короче %d символов\n", WordleGame.WORD_LENGTH);
@@ -156,14 +157,14 @@ public class Wordle {
                 throw new LogWriteException(new IOException("Ошибка записи в лог"));
             }
             throw new InvalidWordLengthException();
-        } else if (!isRussian(userAnswer)) {
+        } else if (!isRussian(answer)) {
             logWrite.println("ОШИБКА: ответ не на русском");
             if (logWrite.checkError()) {
                 throw new LogWriteException(new IOException("Ошибка записи в лог"));
             }
             throw new NonRussianWordException();
         } else {
-            logWrite.printf("Введен корректный ответ: %s\n", userAnswer);
+            logWrite.printf("Введен корректный ответ: %s\n", answer);
             if (logWrite.checkError()) {
                 throw new LogWriteException(new IOException("Ошибка записи в лог"));
             }
@@ -173,7 +174,7 @@ public class Wordle {
     //Проверка на русские символы
     public static boolean isRussian(String userAnswer) {
         if (userAnswer == null) return false;
-        return Pattern.compile("а-я}{5}").matcher(userAnswer).matches();
+        return Pattern.compile("[а-я]{5}").matcher(userAnswer.toLowerCase()).matches();
 
     }
 
