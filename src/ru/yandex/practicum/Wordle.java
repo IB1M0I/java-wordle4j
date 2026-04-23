@@ -90,7 +90,6 @@ public class Wordle {
                                 System.out.println("Поздравляю, слово отгадано!\n");
                                 logWrite.printf("Игра выиграна! Попыток: %d\n", game.getSteps());
                                 if (logWrite.checkError()) {
-                                    
                                     throw new LogWriteException(new IOException("Ошибка записи в лог"));
                                 }
                             }
