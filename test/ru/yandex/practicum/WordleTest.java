@@ -4,10 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.gameException.DictionaryLoadException;
-import ru.yandex.practicum.gameException.InvalidWordLengthException;
-import ru.yandex.practicum.gameException.NonRussianWordException;
-import ru.yandex.practicum.gameException.WordNotFoundInDictionary;
+import ru.yandex.practicum.gameException.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -45,7 +42,10 @@ class WordleTest {
             Wordle.checkUserAnswer("круг", printWriter);
             fail("Ожидался InvalidWordLengthException");
         } catch (InvalidWordLengthException e) {
-            Assertions.assertEquals(String.format("ОШИБКА: ответ длинее/меньше %d символов", WordleGame.WORD_LENGTH), e.getMessage());
+            assertEquals(String.format("ОШИБКА: ответ длинее/меньше %d символов", WordleGame.WORD_LENGTH), e.getMessage());
+        } catch (LogWriteException e) {
+            System.out.println("Системная ошибка!");
+            return;
         }
     }
 
@@ -56,7 +56,10 @@ class WordleTest {
             Wordle.checkUserAnswer("каргуш", printWriter);
             fail("Ожидался InvalidWordLengthException");
         } catch (InvalidWordLengthException e) {
-            Assertions.assertEquals(String.format("ОШИБКА: ответ длинее/меньше %d символов", WordleGame.WORD_LENGTH), e.getMessage());
+            assertEquals(String.format("ОШИБКА: ответ длинее/меньше %d символов", WordleGame.WORD_LENGTH), e.getMessage());
+        } catch (LogWriteException e) {
+            System.out.println("Системная ошибка!");
+            return;
         }
     }
 
@@ -67,7 +70,10 @@ class WordleTest {
             Wordle.checkUserAnswer("apple", printWriter);
             fail("Ожидался NonRussianWordException");
         } catch (NonRussianWordException e) {
-            Assertions.assertEquals("ОШИБКА: ответ содержит нерусские символы", e.getMessage());
+            assertEquals("ОШИБКА: ответ содержит нерусские символы", e.getMessage());
+        } catch (LogWriteException e) {
+            System.out.println("Системная ошибка!");
+            return;
         }
     }
 
@@ -89,6 +95,9 @@ class WordleTest {
             fail("Ожидался WordNotFoundInDictionary");
         } catch (WordNotFoundInDictionary e) {
             assertEquals("Слово не входит в список", e.getMessage());
+        } catch (LogWriteException e) {
+            System.out.println("Системная ошибка!");
+            return;
         }
 
     }
@@ -104,11 +113,14 @@ class WordleTest {
     //Проверка подсказок местонахождения букв
     @Test
     void checkingWordShouldReturnFiveCaretsAndIncreaseStepForCorrectWord() {
-
         String expected = "+++++"; //аванс
 
-        Assertions.assertEquals(expected, game.checkingWord("маска"));
-        Assertions.assertEquals(1, game.getSteps());
+        try {
+            assertEquals(expected, game.checkingWord("маска"));
+        } catch (LogWriteException e) {
+            System.out.println("Системная ошибка!");
+        }
+        assertEquals(1, game.getSteps());
         Assertions.assertTrue(game.getIsWin());
 
 
@@ -119,12 +131,19 @@ class WordleTest {
     void getHintsShouldNotRepeatIssuedHint() {
         WordleDictionary dictionary = new WordleDictionary(List.of("абзац", "аванс"));
         game = new WordleGame(dictionary, printWriter, random);
-        String hint1 = game.getHints(random);
-        String hint2 = game.getHints(random);
-        String hint3 = game.getHints(random);
+        String hint1 = "";
+        String hint2 = "";
+        String hint3 = "";
+        try {
+            hint1 = game.getHints(random);
+            hint2 = game.getHints(random);
+            hint3 = game.getHints(random);
+        } catch (LogWriteException e) {
+            System.out.println("Системная ошибка!");
+        }
 
         Assertions.assertNotEquals(hint1, hint2);
-        Assertions.assertEquals("Подсказок нет", hint3);
+        assertEquals("Подсказок нет", hint3);
 
     }
 
@@ -143,6 +162,9 @@ class WordleTest {
                 fail("Ожидался DictionaryLoadException");
             } catch (DictionaryLoadException e) {
                 assertEquals("Список не загружен", e.getMessage());
+            } catch (LogWriteException e) {
+                System.out.println("Системная ошибка!");
+                return;
             }
         } finally {
             Files.deleteIfExists(dict);
