@@ -17,11 +17,11 @@ import java.util.List;
     на выходе должен быть класс WordleDictionary
  */
 public class WordleDictionaryLoader {
+    PrintWriter logWrite;
+
     public WordleDictionaryLoader(PrintWriter logWrite) {
         this.logWrite = logWrite;
     }
-
-    PrintWriter logWrite;
 
     public WordleDictionary getList() throws DictionaryLoadException, LogWriteException {
         List<String> words = new ArrayList<>(); //Список подходящих слов

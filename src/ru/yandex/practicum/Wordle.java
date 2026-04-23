@@ -23,29 +23,31 @@ import java.util.regex.Pattern;
     вывести состояние игры и конечный результат
  */
 public class Wordle {
-    private static final Path log = Paths.get("log.txt"); //Путь к логу
-    private static final Random random = new Random();
-    private static boolean isStart = true;
+    private static final Path LOG = Paths.get("log.txt"); //Путь к логу
+
 
     public static void main(String[] args) {
+        Random random = new Random();
+        boolean isStart = true;
+
         try {
-            if (!Files.exists(log)) {
+            if (!Files.exists(LOG)) {
                 try {
-                    Files.createFile(log);
-                    try (FileWriter fw = new FileWriter(log.toFile(), true);) {
+                    Files.createFile(LOG);
+                    try (FileWriter fw = new FileWriter(LOG.toFile(), true);) {
 
 
-                        fw.write("Файл log.txt создан");
+                        fw.write("Файл LOG.txt создан");
                         fw.flush();
                     } catch (IOException e) {
-                        System.out.printf("Ошибка создания log.txt: %s\n", e.getMessage());
+                        System.out.printf("Ошибка создания LOG.txt: %s\n", e.getMessage());
                     }
                 } catch (IOException e) {
                     System.out.printf("Ошибка поиска файла: %s\n", e.getMessage());
                 }
             }
 
-            try (Scanner scanner = new Scanner(System.in); PrintWriter logWrite = new PrintWriter(new FileWriter(log.toFile(), StandardCharsets.UTF_8), true);) {
+            try (Scanner scanner = new Scanner(System.in); PrintWriter logWrite = new PrintWriter(new FileWriter(LOG.toFile(), StandardCharsets.UTF_8), true);) {
                 WordleDictionaryLoader wordleLoader = new WordleDictionaryLoader(logWrite);
                 WordleDictionary dictionary = wordleLoader.getList(); //Получения отсортированного словаря
                 WordleGame game = new WordleGame(dictionary, logWrite, random); //Создание объекта игры
@@ -88,6 +90,7 @@ public class Wordle {
                                 System.out.println("Поздравляю, слово отгадано!\n");
                                 logWrite.printf("Игра выиграна! Попыток: %d\n", game.getSteps());
                                 if (logWrite.checkError()) {
+                                    
                                     throw new LogWriteException(new IOException("Ошибка записи в лог"));
                                 }
                             }
@@ -125,18 +128,22 @@ public class Wordle {
                         System.out.println("Начало новой игры");
                         game.newAnswer(random);
                     } else {
-                        System.out.println("========Игра окончена========");
+                        isStart = false;
+                        System.out.println("========Игровая сессия окончена========");
                     }
                 }
 
 
             } catch (LogWriteException | DictionaryLoadException e) {
-                try (FileWriter logWriter = new FileWriter(log.toFile())) {
+                try (FileWriter logWriter = new FileWriter(LOG.toFile())) {
                     logWriter.write(String.format("%s  |||  %s", e.getMessage(), e.getCause().getMessage()));
+                    System.out.println("Системная ошибка!");
+                    return;
                 } catch (IOException ignored) {
                 }
             } catch (IOException e) {
                 System.out.println("Ошибка чтения/записи файла отчета");
+                return;
             }
 
         } catch (Exception e) {

@@ -1,7 +1,7 @@
 package ru.yandex.practicum.gameException;
 
 //Исключение список пуст
-public class DictionaryLoadException extends RuntimeException {
+public class DictionaryLoadException extends Exception {
     public DictionaryLoadException(Throwable cause) {
         super("Список не загружен", cause);
     }

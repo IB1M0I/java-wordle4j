@@ -10,13 +10,14 @@ import java.util.Set;
     также этот класс может содержать рутинные функции по сравнению слов, букв и т.д.
  */
 public class WordleDictionary {
+    private List<String> words;
+
+    private Set<String> wordSet; // HashSet для O(1) проверки contains()
+
     public WordleDictionary(List<String> words) {
         this.words = words;
         this.wordSet = new HashSet<>(words); // Создаем HashSet для быстрой проверки
     }
-
-    private List<String> words;
-    private Set<String> wordSet; // HashSet для O(1) проверки contains()
 
     // Получить размер словаря
     public int size() {

@@ -20,15 +20,9 @@ import java.util.*;
 не забудьте про специальные типы исключений для игровых и неигровых ошибок
  */
 public class WordleGame {
-    public WordleGame(WordleDictionary dictionary, PrintWriter logWrite, Random random) {
-        this.dictionary = dictionary;
-        this.answer = randomAnswer(random);
-        this.logWrite = logWrite;
-    }
-
     public static final int WORD_LENGTH = 5; //Допустимая длина слова
-    public static final int MAX_ATTEMPTS = 6; //Количество попыток
 
+    public static final int MAX_ATTEMPTS = 6; //Количество попыток
     private String answer; //Правильный ответ
 
     private int steps; //Количество попыток
@@ -40,9 +34,16 @@ public class WordleGame {
     private boolean isWin = false;
 
     private final Set<Character> banned = new HashSet<>(); //Буквы которых нет
+
     private final Set<Character> required = new HashSet<>(); //Буквы, которые есть
     private char[] rightPos; //Массив хранящий правильные символы в правильном месте
     private final Set<String> issuedHints = new HashSet<>(); //Список подсказок которые уже выданы
+
+    public WordleGame(WordleDictionary dictionary, PrintWriter logWrite, Random random) {
+        this.dictionary = dictionary;
+        this.answer = randomAnswer(random);
+        this.logWrite = logWrite;
+    }
 
     //Проверка и сравнения слов
     public String checkingWord(String userAnswer) throws LogWriteException, WordNotFoundInDictionary {
